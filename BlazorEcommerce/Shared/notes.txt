@@ -1,0 +1,5 @@
+﻿-- To seed data in any new table, go to data context and add the dummy data using HasData method of 
+modelBuilder.
+After that add the migration, by running the command- dotnet ef migrations add <Mig name (any)> in
+PM console
+Then add the changes (adding seed data) by running dotnet ef database update
