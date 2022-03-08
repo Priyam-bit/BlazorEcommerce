@@ -1,12 +1,13 @@
 ﻿@inject IProductService ProductService
+@implements IDisposable
 
-@if(Products == null) {
+@if(ProductService.Products == null) {
     <span>Loading Products...</span>
 }
 else
 {
     <ul class = "list-unstyled">
-        @foreach (var product in Products)
+        @foreach (var product in ProductService.Products)
        {
            <li class = "media my-3">
                <div class = "media-img-wrapper mr-2">
@@ -29,18 +30,14 @@ else
 }
 
 @code {
-    private static List<Product> Products = new List<Product>();
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        if (ProductService.Products.Count != 0)
-        {
-            Products = ProductService.Products;
-        }
-        else
-        {
-            await ProductService.GetProducts();
-            Products = ProductService.Products;
-        }
+        ProductService.ProductsChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        ProductService.ProductsChanged -= StateHasChanged;
     }
 
 }

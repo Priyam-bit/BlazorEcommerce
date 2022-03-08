@@ -3,3 +3,40 @@ modelBuilder.
 After that add the migration, by running the command- dotnet ef migrations add <Mig name (any)> in
 PM console
 Then add the changes (adding seed data) by running dotnet ef database update
+
+--Making a new api for a model
+-ADD a <EntityName>Service folder in Services folder, and add interface I<EntityName>Service
+and its implementation class <EntityName>Service files in it
+-add the method signatures (eg getAllProducts, getProductById,etc) to interface
+-implement the interface in implementation file. Inject data context here to get access to db
+-Register this service in Program.cs using AddScoped
+-Create a controller <EntityName>Controller, and inject the interface in it, to get access to its methods
+-call the methods in the endpt wrapper functions. (forwarding client request to service)
+
+
+--fetching products by category on lcient side and displaying them
+- we change the method signature of GetProducts in which we now pass an arg categoryUrl,
+which is set to null by default. We also add an event ProductsChanged in the IProductService
+and invoke it whenever a api request is made (GetProducts call)
+-In ProductService, in GetProducts, if categoryUrl is null we fetch all products else we fetch
+products according to categoryUrl
+
+flow-												ProductsChanged invoked and products fetched
+Index page (GetProducts called from ProductService) -------------------------------------------->
+													Whenever homepage(/) or category page(/{categoryUrl})
+
+ProductsChanged event invokation is notified to all the subscribers (ProductList) of the events's 
+service (ProductService). 
+State.Onchange += HandleChange is how the subscribers call the appropriate method (HandleChange) when
+the event (OnChange) is invoked
+Here, ProductService.ProductsChanged += StateHasChanged. StateHasChanged is an inbuilt function which
+notifies the base component (ProductList) that state has changed (products) and causes it o re-render it
+https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/events/how-to-subscribe-to-and-unsubscribe-from-events
+
+--Go from Home to books
+-products set to (all) in Home
+-We go to /books so categoryUrl set to books and products which are books are fetched using ProductService 
+-products set to (books) but page still displays all products, since productList doesn't know yet
+-The event ProductsChanged is invoked and ProductList is notified
+-ProductList calls StateHasChanged on being notified and hence is re-rendered displaying new list
+of products (which are books)

@@ -33,5 +33,24 @@
             };
             return response;
         }
+
+        public async Task<ServiceResponse<List<Product>>> GetProductsByCategory(string categoryUrl)
+        {
+            var products =
+                await _context.Products.
+                Where(p => p.Category.Url.ToLower().Equals(categoryUrl.ToLower()))
+                .ToListAsync();
+            var response = new ServiceResponse<List<Product>>();
+            if (products.Count == 0)
+            {
+                response.Success = false;
+                response.Message = "Sorry no product found";
+            }
+            else
+            {
+                response.Data = products;
+            };
+            return response;
+        }
     }
 }
