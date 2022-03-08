@@ -1,4 +1,9 @@
-﻿.media-img {
+﻿.product-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.media-img {
     max-height : 500px;
     max-width : 500px;
     border-radius : 6px;
@@ -9,14 +14,27 @@
     max-height : 500px;
     max-width : 500px;
     text-align : center;
+    margin-right : 10px;
+}
+
+.original-price {
+    text-decoration : line-through;
+}
+
+.product-types {
+    margin-bottom : 80px;
 }
 
 @media (max-width : 1023.98px) {
+    .product-wrapper {
+        flex-direction : column;
+    }
     .media-img {
         max-width : 300px;
     }
     .media-img-wrapper {
         max-width : 100%;
         height : auto;
+        margin-bottom : 40px;
     }
 }

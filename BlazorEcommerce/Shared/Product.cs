@@ -13,8 +13,7 @@ namespace BlazorEcommerce.Shared
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
-        [Column(TypeName = "decimal(18,2)")]  //define decimal places (total digits, digits after .)
-        public decimal Price { get; set; }
+        public List<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();
 
         //many to one relation with category
         //? after Category allows this field to be nullable
