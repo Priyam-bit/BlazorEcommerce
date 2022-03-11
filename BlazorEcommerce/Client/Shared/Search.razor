@@ -1,0 +1,65 @@
+﻿@inject NavigationManager NavigationManager
+@inject IProductService ProductService
+
+<div class = "input-group">
+    <input 
+       @bind-value = "searchText"
+       @bind-value:event = "oninput"
+       type = "search"
+       list = "products" 
+       @onkeyup = "HandleSearch"
+       class = "form-control"
+       placeholder = "Search products..."
+       @ref = "searchInput"
+    />
+    <datalist id = "products">
+        @foreach (var suggestion in suggestions)
+        {
+            <option>@suggestion</option>
+        }
+    </datalist>
+    <div class = "input-group-append">
+        <button class = "btn btn-primary" @onclick = "SearchProducts">
+            <span class = "oi oi-magnifying-glass"></span>
+        </button>
+    </div>
+</div>
+
+@code {
+    private string searchText = string.Empty;
+    private List<string> suggestions = new List<string>();
+    //element reference to search input text field in html
+    protected ElementReference searchInput;
+    //to implement this and set the focus on search input field we
+    //need to use the third lifecycle method onAfterRender
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        //flag firstRender is very imp, if we don't check for firstRender 
+        //it will be called everytime the component is rendered
+        if(firstRender)
+        {
+            await searchInput.FocusAsync();
+        }
+
+    }
+    public void SearchProducts()
+    {
+        //navigate user to search route based on searchText
+        NavigationManager.NavigateTo($"search/{searchText}");
+    }
+    public async void HandleSearch(KeyboardEventArgs args)
+    {
+        //if user submits the field or presses enter display search results
+        //else return searchSuggestions based on searchInput
+
+        if (args.Key == null || args.Key.Equals("Enter"))
+        {
+            SearchProducts();
+        }
+        else if(searchText.Length > 0)
+        {
+            suggestions = await ProductService.GetProductSearchSuggestions(searchText);
+        }
+    }
+}

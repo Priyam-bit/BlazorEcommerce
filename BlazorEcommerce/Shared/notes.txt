@@ -40,3 +40,33 @@ https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/events/how-to-s
 -The event ProductsChanged is invoked and ProductList is notified
 -ProductList calls StateHasChanged on being notified and hence is re-rendered displaying new list
 of products (which are books)
+
+--Search
+-Server : 
+-Add the SearchProducts method signature to IProductSevice, implement it in ProductService
+-Add a Get route search/{searchText} to ProductController 
+
+--SearchRecommendation
+-Server : 
+-Add the GetProductSearchSuggestions method signature to IProductSevice, implement it in ProductService
+which returns a serviceresponse of a list of strings (instead of products) to autocomplete
+									 ---------------
+-Add a Get route seacrhSuggestions/{searchText} to ProductController 
+
+-in frontend add methods for both of these in IProductService
+-Implement both in ProductService
+-SearchProducts will make an api call to $"api/product/search/{searchText}" and update 
+Products, and invoke products changed
+-GetProductSearchSuggestions will simply make an api call to $"api/product/searchSuggestions/{searchText}"
+and return the data from result
+
+-make a route for search page in index page "/search/{searchText}", if searchText is not
+null call SearchProducts method to update the displayed products
+-so that users can search products from url
+
+--creating a search component
+-inject ProductService and NavigationManager (to redirect to some other page)
+-bind listens to OnChange event only
+-with bind-value we can assign a custon event to listen to
+-in input field the list name should match with the id of datalist component
+-add the search component to layout
