@@ -1,0 +1,13 @@
+﻿@inject NavigationManager NavigationManager
+
+<button @onclick = "GoHome"
+    class = "btn btn-primary home-button">
+    <span class="oi oi-home"></span>
+</button>
+
+@code {
+    public void GoHome()
+    {
+        NavigationManager.NavigateTo("");
+    }
+}

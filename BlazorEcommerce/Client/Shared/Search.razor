@@ -19,7 +19,9 @@
         }
     </datalist>
     <div class = "input-group-append">
-        <button class = "btn btn-primary" @onclick = "SearchProducts">
+        <button class = "btn btn-primary" 
+        style = "background-color : #314559"    
+        @onclick = "SearchProducts">
             <span class = "oi oi-magnifying-glass"></span>
         </button>
     </div>
@@ -48,7 +50,7 @@
         //navigate user to search route based on searchText
         NavigationManager.NavigateTo($"search/{searchText}");
     }
-    public async void HandleSearch(KeyboardEventArgs args)
+    public async Task HandleSearch(KeyboardEventArgs args)
     {
         //if user submits the field or presses enter display search results
         //else return searchSuggestions based on searchInput

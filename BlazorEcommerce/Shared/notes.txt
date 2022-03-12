@@ -70,3 +70,6 @@ null call SearchProducts method to update the displayed products
 -with bind-value we can assign a custon event to listen to
 -in input field the list name should match with the id of datalist component
 -add the search component to layout
+
+--creating a new layout
+-create shared layout component and change the DefaultLayout and Layout in App.razor
