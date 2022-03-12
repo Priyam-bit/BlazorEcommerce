@@ -1,0 +1,35 @@
+﻿.container {
+    display : flex;
+    flex-direction : row;
+    /*scrollable in x direction*/
+    overflow-x : auto;
+    justify-content : center;
+    margin-bottom : 30px;
+}
+
+img {
+    max-width : 200px;
+    max-height : 200px;
+    border-radius: 6px;
+    margin-block : 10px;
+}
+
+img:hover {
+    transform: scale(1.1);
+    transition :ease-in 0.1s;
+}
+
+.featured-product {
+    margin : 10px;
+    text-align : center;
+    padding : 10px;
+    border : 1px solid lightgray;
+    border-radius : 10px;
+    max-width : 200px;
+}
+
+@media (max-width : 1023.98px) {
+    .container {
+        justify-content : flex-start;
+    }
+}

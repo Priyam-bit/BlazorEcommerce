@@ -1,0 +1,36 @@
+﻿@inject IProductService ProductService
+
+<center><h2>Top Products of Today</h2></center>
+@if(featuredProducts == null || featuredProducts.Count == 0)
+{
+    <span>Loading products...</span>
+} else
+{
+    <div class = "container">
+        @foreach (var product in featuredProducts)
+       {
+           <div class = "featured-product">
+               <div>
+                   <a href = "product/@product.Id">
+                       <img src = "@product.ImageUrl" />
+                   </a>
+               </div>
+               <h4><a href = "product/@product.Id">@product.Title</a></h4>
+                @if(product.ProductVariants != null && product.ProductVariants.Count > 0)
+                {
+                    <h5 class = "price">
+                        $@product.ProductVariants[0].Price
+                    </h5>
+                }
+            </div>
+       }
+    </div>
+}
+
+@code {
+    private List<Product> featuredProducts = new List<Product>();
+    protected override async Task OnInitializedAsync()
+    {
+        featuredProducts = await ProductService.GetFeaturedProducts();
+    }
+}

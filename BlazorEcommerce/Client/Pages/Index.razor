@@ -5,6 +5,11 @@
 
 <PageTitle>My shop</PageTitle>
 
+@if(CategoryUrl == null && searchText == null)
+{
+    <FeaturedProducts />    
+}
+
 <ProductList />
 
 @code {

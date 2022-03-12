@@ -73,3 +73,16 @@ null call SearchProducts method to update the displayed products
 
 --creating a new layout
 -create shared layout component and change the DefaultLayout and Layout in App.razor
+
+--featured products
+-add a new boolean column featured to products table, set default to false
+-seed data again by updating some products in hasData with featured set as true
+-backend
+-add method signature to get featured products in IProductService and implement it in 
+ProductService
+-make a route "/featured" in ProductController
+-frontend
+-add method signature to get featured products in IProductService and implement it in 
+ProductService (where you get it from api and return the products)
+-display the featured products in its own shared component
+-render the shared component in index page

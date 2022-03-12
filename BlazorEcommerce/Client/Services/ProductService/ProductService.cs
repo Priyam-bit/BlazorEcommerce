@@ -14,11 +14,11 @@ namespace BlazorEcommerce.Client.Services.ProductService
         public List<Product> Products { get; set; } = new List<Product>();
         public string Message { get; set; } = "Loading products...";
 
-        public async Task GetProducts(string? categoryUrl = null )
+        public async Task GetProducts(string? categoryUrl = null)
         {
-            var result = categoryUrl == null ? 
+            var result = categoryUrl == null ?
                 await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/product")
-                : 
+                :
                 await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>($"api/product/category/{categoryUrl}");
             if (result != null && result.Data != null)
             {
@@ -26,18 +26,18 @@ namespace BlazorEcommerce.Client.Services.ProductService
             }
             ProductsChanged.Invoke();
         }
-        public async Task<ServiceResponse<Product>>  GetProductById(int productId)
+        public async Task<ServiceResponse<Product>> GetProductById(int productId)
         {
-            var result = 
+            var result =
                 await _http.GetFromJsonAsync<ServiceResponse<Product>>($"api/product/{productId}");
             return result;
         }
 
         public async Task SearchProducts(string searchText)
         {
-            var result = 
+            var result =
                 await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>($"api/product/search/{searchText}");
-            if(result != null && result.Data != null)
+            if (result != null && result.Data != null)
             {
                 Products = result.Data;
             }
@@ -52,6 +52,13 @@ namespace BlazorEcommerce.Client.Services.ProductService
         {
             var result =
                 await _http.GetFromJsonAsync<ServiceResponse<List<string>>>($"api/product/searchSuggestions/{searchText}");
+            return result.Data;
+        }
+
+        public async Task<List<Product>> GetFeaturedProducts()
+        {
+            var result =
+                 await _http.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/product/featured");
             return result.Data;
         }
     }

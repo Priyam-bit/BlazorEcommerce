@@ -13,6 +13,7 @@ namespace BlazorEcommerce.Shared
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
+        public bool Featured { get; set; } = false;
         public List<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();
 
         //many to one relation with category
