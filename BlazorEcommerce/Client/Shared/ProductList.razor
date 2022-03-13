@@ -1,7 +1,7 @@
 ﻿@inject IProductService ProductService
 @implements IDisposable
 
-@if(ProductService.Products == null) {
+@if(ProductService.Products == null || ProductService.Products.Count == 0) {
     <span>@ProductService.Message</span>
 }
 else
@@ -27,9 +27,24 @@ else
            </li>
        }
     </ul>
+    if(search)
+    {
+        for (var i = 1; i < ProductService.PageCount + 1; i++)
+        {
+            <a class = "btn
+                @(i == ProductService.CurrentPage ? "btn-info" : "btn-outline-info")
+                page-selection "
+                href = "/search/@ProductService.LastSearchText/@i">
+                @i
+            </a>
+        }
+    }
 }
 
 @code {
+    [Parameter]
+    public bool search { get; set; }
+
     protected override void OnInitialized()
     {
         ProductService.ProductsChanged += StateHasChanged;

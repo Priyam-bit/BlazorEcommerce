@@ -86,3 +86,30 @@ ProductService
 ProductService (where you get it from api and return the products)
 -display the featured products in its own shared component
 -render the shared component in index page
+
+--DTO (Data transfer objects)
+-To return selected fields of a model, instead of all the fields
+-We can also add other information with the selected fields
+
+--Pagination in search results
+-backend
+-We make a new DTO class, ProductSearchResultDTO with a list of products, total pages, 
+current page
+-In IProductService we change the return type of SearchProducts to ProductSearchResultDTO 
+instead of just a list of products, and add page as an argument
+-Update its implementation in ProductService
+-Update route in product controller to search/{searchText}/{page} where default value of page = 1
+
+-frontend
+-in IProductService add the fields currentPage, pageCount, lastSearchText, add arg
+page to SearchProducts
+-in productService initialize currentPage to 1, pageCount to 0, lastSearchText to empty string
+-Update SearchProducts implementation and set currentPage, pageCount, lastSearchText based
+on response, so that we can display pages in ProductList
+-In index.razor update searchText route with page as parameter
+-In search component set the request url to $"search/{searchText}/1" (default search result page)
+-pass search = true as param to ProductList if it is a search page in index
+-In productList, if it is a searchList then render buttons for total pages (pageCount 
+set in productService on SearchProducts call) which point to /search/@ProductService.LastSearchText/@i
+where i is the button / page number
+-Outline the button if its number is same as currentPage

@@ -60,12 +60,40 @@
             return response;
         }
 
-        public async Task<ServiceResponse<List<Product>>> SearchProducts(string searchText)
+        public async Task<ServiceResponse<ProductSearchResultDTO>> SearchProducts(string searchText, int page)
         {
             //return products which contain searchText in either title or description
-            var response = new ServiceResponse<List<Product>>
+            //on pageNumber page
+            var pageResults = 2f; //2 products on a single page
+            var pageCount = Math.Ceiling((await GetProductsBySearchText(searchText)).Count / pageResults);
+            if(page > pageCount)
             {
-                Data = await GetProductsBySearchText(searchText)
+                return new ServiceResponse<ProductSearchResultDTO>()
+                {
+                    Data = new ProductSearchResultDTO
+                    {
+                        Products = new List<Product>(),
+                        Pages = (int)pageCount,
+                        CurrentPage = page
+                    },
+                    Message = "No more products to show"
+                };
+            }
+            var products = await _context.Products
+                                .Where(p => p.Title.ToLower().Contains(searchText.ToLower())
+                                || p.Description.ToLower().Contains(searchText.ToLower()))
+                                .Include(p => p.ProductVariants)
+                                .Skip((page - 1) * (int)pageResults)
+                                .Take((int)pageResults)
+                                .ToListAsync();
+            var response = new ServiceResponse<ProductSearchResultDTO>
+            {
+                Data = new ProductSearchResultDTO
+                {
+                    Products = products,
+                    Pages = (int)pageCount,
+                    CurrentPage = page
+                }
             };
 
             return response;
