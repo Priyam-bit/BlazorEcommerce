@@ -113,3 +113,55 @@ on response, so that we can display pages in ProductList
 set in productService on SearchProducts call) which point to /search/@ProductService.LastSearchText/@i
 where i is the button / page number
 -Outline the button if its number is same as currentPage
+
+--cart using local storage 
+-add Blazored.LocalStorage nuget package in client project
+-add the BlazoredLocalStorage service to app in program.cs 
+-also add the using Blazored.LocalStorage directive in _imports to use it in client globally
+-add CartCounter component, and display it next to Search
+-Make a CartItem model in backend with properties ProductId and ProductTypeId (All other
+info regarding the item can be gathered in server with these 2 props)
+
+-client
+-add CartService which will add items to local storage and read items from local storage
+-contains an event OnChange so that whenever cart updated, we can invoke it; method
+to add item to cart, get all items from cart (localstorage)
+-In implementation class we inject local storage in ctor, and implement the methods
+
+-Make an add to cart button in ProductDetails page which takes the selected productVariant 
+(GetSelectedVariant()), converts it into a cartItem and stores it in localStorage using
+CartService
+
+-Now when we add product to cart we want to update productCount in topbar cart
+So CartCounter needs to subscribe to CartService, listen to the event OnChange starting when
+CartCounter is initialized -> rerender component when OnChange is invoked
+-Add method to get cart items count to display in CartCounter
+
+--Turn cartitems into products (with selected fields using CartProductResponeDTO)
+though api endpt
+-create a CartProductResponeDTO and add all the properties to show
+-create a cartservice in backend
+-add method signature of the method to convert cartitems to CartProductDTOs in ICartService
+which accepts list of cartitems as input
+-create a CartController to make a POST api endpoint for this service method
+-make a method GetCartProducts in the client ICartService, no need to add arg
+List<CartItem> in the signature, as we can access them from localstorage
+-implement the post api call to /api/cart/product in the method implementation
+
+-adding a method in client CartService to remove item from cart (local storage)
+-since we store item in localStorage by productId and productTypeId of item, it only makes
+sense to pass those as arguments to Remove method
+-add delete button in CartPage, add onclick method which calls removeProductFromCart with the
+parameters
+
+-add quantity field to CartItem model and Cart
+-in server CartService add the quantity field wherever CartProductResponseDTO is created
+-make changes in client CartService addToCart method 
+
+-Update item quantity in cart
+-add method UpdateQuantity in client ICartService which accepts CartProductResponseDTO
+as input (since it is displayed in cart page) and sets the quantity of product ans input's quantity
+
+-add input field for quantity in cart for each product
+-onchange i input field, parse the ChangeEventArgs and get its integer value, and update 
+product quantity, update the quantity in localstorage using cartService
