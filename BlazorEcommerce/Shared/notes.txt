@@ -165,3 +165,95 @@ as input (since it is displayed in cart page) and sets the quantity of product a
 -add input field for quantity in cart for each product
 -onchange i input field, parse the ChangeEventArgs and get its integer value, and update 
 product quantity, update the quantity in localstorage using cartService
+
+---user authentication
+
+-add user registration model
+-create a user registration form (EditForm in Register razor component)
+-add a new shared component UserMenuButton, which will give the user option to login / 
+register (using dropdown)
+
+-for using validations in EditForm we need to add anotations to the fields in our model
+(here userRegister), eg [Required] with namespace using System.ComponentModel.DataAnnotations;
+-to activate validations in our editForm we need to add the DataAnnotationsValidator component
+inside the form
+-we can display validation message in 2 ways
+1. Using <ValidationSummary /> component we can show all error messages together
+2. Using <ValidationMessage For = "@(() => Model.Field)" /> we can show error message for 
+that field
+
+--creating a user model to store user in database
+-We need a byte array to store password since we're going to hash it and a byte array for
+salt, since the hash for 2 same passwords will be same and a salt is a value generated 
+by a cryptographically secure function that is added to the input of hash functions to
+create unique hashes for every input, regardless of the input not being unique
+-we need another table for users in db, so add DbSet in Datacontext
+-add migration and update db
+
+--creating an Authentication service in server
+-register in program.cs
+-A method to register user which requires email and password, and returns the userId
+-The design decision taken for uniqueness of user is : Unique emails for  users, usernames
+can be same
+-A method to check if user exists which accepts Email
+
+--Add AuthController to access the service from client which accepts the userRegister input
+
+--Add AuthService to Client which conatins all the methods to query the AuthService in 
+server
+-register in program.cs and add to imports
+
+
+--Using the AuthService in Register page
+-inject AuthService
+-call Register method in HandleRegistration()
+ 
+ ---Login user (using email and password)
+
+ -Create a UserLogin model (Email & password)
+ -Create a Login page similar to Register page using EditForm
+
+--Handling login in backend
+ -In backend, when we get a POST request with email and password we need to verify
+ the user email and password and also create a JSON web token that the user can use for 
+ every other request, meaning that not with every request the user has to enter email &
+ password. We'd just put that JSON web token to the request header and then the service 
+ knows who the user is.
+
+ -To do that we need to add a secret key to our app,
+ we add  "AppSettings": {
+    "Token": "HExv9Cfpj6BrxR6"
+  }, to appsettings.json
+
+  -Add a Login method to server auth service which checks if user exists, verifies password
+  and on success returns a JWT
+  -To generate a JWT, we need the secret key in our appsettins.json, to do so we inject 
+  configuration to the AuthService class
+  -With the help of JWT, we can store some claims to the token. For eg the claim 
+  could be - username, email, user id, anything
+  -we'll add the claims - user id, username, email
+
+  --implement login on client
+  -add and implement the login function in AuthService which makes the api call and returns
+  jwt string
+  -we need to inject authservice, local storage (to store the token in local storage),
+  navigation manager (to redirect to home) in login page
+
+  --implement custom AuthStateProvider
+  -we'll not ask this service directly if a user is authenticated or not, we will use
+  components that react to the current state and ask the authentication provider to
+  notify these components of the new state
+  install new nuGet package microsoft.aspnetcore.components.authorization in client
+  -create a new class CustomAuthStateProvider in client
+ -ParseClaimsFromJwt taken from
+https://github.com/SteveSandersonMS/presentation-2019-06-NDCOslo/blob/master/demos/MissionControl/MissionControl.Client/Util/ServiceExtensions.cs
+
+--expose the authentication state
+-add the global using directive for Microsoft.AspNetCore.Components.Authorization in 
+client/program.cs
+-Add 'AddOptions', 'AddAuthorizationCore' to services in program.cs, register the 
+CustomAuthStateProvider as AuthenticationStateProvider for client
+-wrap the whole App.razor in <CascadingAuthenticationState> so that the whole app can 
+check the authentication state of user
+-Also replace RouteView component with AuthorizeRouteView so that only authenticated users
+are authorized to view content

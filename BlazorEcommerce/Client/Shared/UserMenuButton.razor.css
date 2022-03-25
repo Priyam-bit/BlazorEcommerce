@@ -1,0 +1,22 @@
+﻿.show-menu {
+    display : block;
+}
+
+.user-menu-button {
+    background-color: #314559;
+    color : white;
+    display : flex;
+    align-items : center;
+    justify-content : center;
+    height : 35px;
+    width : 40px;
+    margin-left : .5em;
+}
+
+.person-icon {
+    padding-left : 4px;
+}
+
+.top-row a {
+    margin-left : 0;
+}

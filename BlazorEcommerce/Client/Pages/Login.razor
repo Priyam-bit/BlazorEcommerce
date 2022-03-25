@@ -1,0 +1,49 @@
+﻿@page "/login"
+@inject IAuthService AuthService
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+
+<PageTitle>Login</PageTitle>
+
+<h3>Login</h3>
+
+<EditForm Model = "user" OnValidSubmit = "HandleLogin">
+    <DataAnnotationsValidator />
+    <div class = "email mb-3">
+        <label for = "email">Email</label>
+        <InputText id = "email" @bind-Value = "user.Email" class = "form-control"
+        autocomplete="username"/>
+        <ValidationMessage For = "@(() => user.Email)" />
+    </div>
+    <div class = "password mb-3">
+        <label for = "password">Password</label>
+        <InputText id = "password" @bind-Value = "user.Password" class = "form-control" 
+        type = "password" autocomplete = "current-password"/>
+        <ValidationMessage For = "@(() => user.Password)" />
+    </div>
+    <button type = "submit" class = "btn btn-primary">Register</button>
+</EditForm>
+<div class = "text-danger">
+    <span>@errorMessage</span>
+</div>
+
+
+@code {
+    private UserLogin user = new UserLogin();
+    private string errorMessage = string.Empty;
+    private async Task HandleLogin()
+    {
+        var result = await AuthService.Login(user);
+        if(result.Success)
+        {
+            errorMessage = string.Empty;
+            //set token in local storage
+            await LocalStorage.SetItemAsync("authToken", result.Data);
+            NavigationManager.NavigateTo("");
+        }
+        else
+        {
+            errorMessage = result.Message;
+        }
+    }
+}
