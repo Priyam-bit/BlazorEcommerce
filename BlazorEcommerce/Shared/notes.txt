@@ -267,3 +267,15 @@ login / logout button  based on user auth state
 -on clicking logout remove authToken from local storage and get the authentication state
 navigate to home page after logging out
 
+--sending user back to the previous page, after logging in
+-for this we need a return url and for it to work we need to add the nuget package
+microsoft.aspnetcore.webutilities (to usee query strings)
+-now in user button, the href for login needs to be updated so it has a returnUrl query
+parameter for the user to return to this page
+href = 'login/returnUrl=@NavigationManager.Uri'
+-Now in login page we need to accept this query parameter and redirect user to it after login
+-get the returnUrl query parameter in login page when the component is intialized 
+using QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl", out var param)
+
+
+sample login route https://localhost:7030/login?returnUrl=movies
