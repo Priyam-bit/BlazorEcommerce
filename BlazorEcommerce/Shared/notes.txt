@@ -257,3 +257,13 @@ CustomAuthStateProvider as AuthenticationStateProvider for client
 check the authentication state of user
 -Also replace RouteView component with AuthorizeRouteView so that only authenticated users
 are authorized to view content
+
+--building logout button using AuthorizeView
+-after setting authToken in local storage in login we get the new authentication state of
+user by using the AuthenticationStateProvider (CustomAuthStateProvider)
+-Now with the new authentication state being set, we can go to our user button and display 
+login / logout button  based on user auth state
+-Using authorizeView show logout / login & register accoring to authorized or notAuthoried
+-on clicking logout remove authToken from local storage and get the authentication state
+navigate to home page after logging out
+
